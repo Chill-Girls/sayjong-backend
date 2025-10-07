@@ -10,8 +10,7 @@ import lombok.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"syl_no", "line_no"})}
 )
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class LyricSyllable {

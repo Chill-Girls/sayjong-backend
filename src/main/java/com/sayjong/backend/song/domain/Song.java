@@ -8,8 +8,7 @@ import lombok.*;
 @Entity
 @Table(name = "song")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @ToString

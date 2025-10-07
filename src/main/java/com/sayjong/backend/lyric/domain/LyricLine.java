@@ -11,8 +11,7 @@ import lombok.*;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"line_no", "song_id"})} //한 곡 안에서 각 소절번호는 유일해야함
 )
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class LyricLine {

@@ -8,8 +8,7 @@ import lombok.*;
 @Entity
 @Table(name = "analysis_result_syllable")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class AnalysisResultSyllable {

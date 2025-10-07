@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "song_id"})} //한사용자당 한 노래는 1행만 유지
 )
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class TrainingSession {
