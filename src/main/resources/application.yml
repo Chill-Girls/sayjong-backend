@@ -18,3 +18,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+  batch:
+    jdbc:
+      platform: mysql

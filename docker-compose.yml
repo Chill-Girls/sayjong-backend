@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Spring Boot 애플리케이션 서비스
+  backend:
+    build: . # 현재 디렉토리의 Dockerfile을 사용하여 이미지 빌드
+    container_name: sayjong-backend
+    ports:
+      - "8080:8080" # 호스트의 8080 포트와 컨테이너의 8080 포트 연결
+    environment:
+      # application.yml에서 사용한 환경 변수 설정
+      - DB_HOST=db # DB 서비스의 호스트 이름은 서비스명(db)으로 지정
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db # db 서비스가 시작된 후에 backend 서비스가 시작되도록 설정
+
+  # MySQL 데이터베이스 서비스
+  db:
+    image: mysql:8.0
+    container_name: sayjong-db
+    ports:
+      - "3306:3306" # 외부 DB 클라이언트 연결을 위해 포트 개방
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD} # MySQL 루트 비밀번호
+      - MYSQL_DATABASE=${DB_NAME}               # 생성할 데이터베이스 이름
+      - MYSQL_USER=${DB_USERNAME}               # 생성할 사용자 이름
+      - MYSQL_PASSWORD=${DB_PASSWORD}           # 생성할 사용자의 비밀번호
+    volumes:
+      - db-data:/var/lib/mysql # 데이터베이스 데이터를 영구적으로 저장하기 위한 볼륨
+    command:
+      # 타임존 및 문자 인코딩 설정
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+
+volumes:
+  db-data: # 명명된 볼륨 정의
