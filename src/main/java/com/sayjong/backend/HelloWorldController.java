@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//TODO(jiho): 본 파일은 healthcheck 용도의 임시 파일입니다. 제거 예정!
 @RestController
 @RequestMapping("/hello")
 public class HelloWorldController {

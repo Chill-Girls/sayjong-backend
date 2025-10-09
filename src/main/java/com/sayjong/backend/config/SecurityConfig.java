@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+//TODO(jiho): 빠른 healthcheck를 위해 임시로 security를 비활성화합니다. 제거 예정!
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
