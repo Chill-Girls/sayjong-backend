@@ -15,7 +15,7 @@ public class User {
     @Column(nullable = false)
     private Integer userId;  //유저식별자(PK)
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String userPassword;  //유저비밀번호
 
     @Column(nullable = false, length = 50, unique = true)
