@@ -1,6 +1,7 @@
 package com.sayjong.backend.user.controller;
 
 import com.sayjong.backend.user.dto.TokenInfo;
+import com.sayjong.backend.user.dto.TokenRefreshRequestDto;
 import com.sayjong.backend.user.dto.UserLoginRequestDto;
 import com.sayjong.backend.user.dto.UserSignUpRequestDto;
 import com.sayjong.backend.user.service.UserService;
@@ -43,6 +44,19 @@ public class UserController {
             //이메일 또는 비밀번호가 틀린 경우
             log.warn("Login failed for email: {}", requestDto.getEmail());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    //토큰 재발급
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody TokenRefreshRequestDto requestDto) {
+        try {
+            TokenInfo tokenInfo = userService.reissueToken(requestDto.getRefreshToken());
+            return ResponseEntity.ok(tokenInfo);
+        } catch (RuntimeException e) {
+            //유효하지 않은 토큰이나 사용자를 찾을 수 없을 때
+            log.warn("Token refresh failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 }
