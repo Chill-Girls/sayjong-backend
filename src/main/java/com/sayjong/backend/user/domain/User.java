@@ -23,4 +23,12 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String nickname;  //유저닉네임
+
+    @Column
+    private String refreshToken; //리프레시 토큰
+
+    //새로운 리프레시 토큰으로 갱신
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
