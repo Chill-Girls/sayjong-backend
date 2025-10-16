@@ -37,10 +37,10 @@ public class LyricLine {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String nativeAudioUrl; //원어민 오디오 URL (영어여도 오디오 제공)
 
+	@Column(nullable = false)
+	private Long startTime; //가사 시작 시간 (milliseconds)
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id", nullable = false)
     private Song song;  //노래식별자
-
-	@Column(name = "start_time_ms", nullable = false)
-	private Long startTimeMs; //가사 시작 시간 (milliseconds)
 }
