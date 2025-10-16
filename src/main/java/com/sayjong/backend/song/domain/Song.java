@@ -27,6 +27,11 @@ public class Song {
     @Column(nullable = false, length = 20)
     private String singer;      //가수
 
+	@NotBlank
+	@Size(max = 30)
+	@Column(nullable = false, unique = true, length = 30)
+	private String trackId;     // Spotify 트랙 ID
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String coverUrl;    //커버이미지 URL
