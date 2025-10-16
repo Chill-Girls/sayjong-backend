@@ -1,16 +1,22 @@
 package com.sayjong.backend.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 //TODO(jiho): 빠른 healthcheck를 위해 임시로 security를 비활성화합니다. 제거 예정!
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-	@Bean
+	/*@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			// CSRF 보호 비활성화 (개발 초기 단계에서는 편리함을 위해 비활성화)
@@ -23,5 +29,37 @@ public class SecurityConfig {
 			);
 
 		return http.build();
+	}*/
+	private final JwtTokenProvider jwtTokenProvider;
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+				//CSRF 보호 비활성화 (개발 초기 단계에서는 편리함을 위해 비활성화)
+				.csrf(csrf -> csrf.disable())
+
+				//HTTP Basic 인증 비활성화
+				.httpBasic(httpBasic -> httpBasic.disable())
+
+				//세션 STATELESS 설정
+				.sessionManagement(sessionManagement ->
+						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
+
+				//요청 경로별 권한 설정
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/auth/**").permitAll()  //해당 경로는 모두 허용
+						.anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
+				)
+
+				//JWT 인증 필터
+				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() { //비밀번호 암호화
+		return new BCryptPasswordEncoder();
 	}
 }
