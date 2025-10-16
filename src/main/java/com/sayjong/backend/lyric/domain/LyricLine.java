@@ -21,23 +21,26 @@ public class LyricLine {
     @Column(name = "line_no", nullable = false)
     private Integer lineNo;  //소절번호(PK)
 
-    @Size(max = 20)
-    @Column(nullable = false, length = 20)
-    private String textKor;  //한국어소절
+	@Size(max = 100)
+	@Column(nullable = false, length = 100)
+	private String originalText;  //원본 가사 (어떤 언어든 저장)
 
     @Size(max = 40)
     @Column(nullable = false, length = 40)
-    private String textRomaja; //로마자표기
+    private String textRomaja; //로마자표기 (영어 가사이면 그냥 원본 가사 유지)
 
     @Size(max = 100)
     @Column(nullable = false, length = 100)
-    private String textEng; //영어해석
+    private String textEng; //영어해석 (영어 가사이면 그냥 원본 가사 유지)
 
     @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String nativeAudioUrl; //원어민(한국어발음)오디오 URL
+    private String nativeAudioUrl; //원어민 오디오 URL (영어여도 오디오 제공)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id", nullable = false)
     private Song song;  //노래식별자
+
+	@Column(name = "start_time_ms", nullable = false)
+	private Long startTimeMs; //가사 시작 시간 (milliseconds)
 }

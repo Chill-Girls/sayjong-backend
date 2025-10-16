@@ -10,7 +10,6 @@ WORKDIR /app
 COPY gradlew .
 COPY build.gradle .
 COPY settings.gradle .
-# 이 줄을 추가하세요!
 COPY gradle ./gradle
 
 # 그래들 실행 권한 부여
