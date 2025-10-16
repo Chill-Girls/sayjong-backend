@@ -19,7 +19,7 @@ public class User {
     private String userPassword;  //유저비밀번호
 
     @Column(nullable = false, length = 50, unique = true)
-    private String email;  //유저이메일
+    private String loginId;  //로그인아이디
 
     @Column(nullable = false, length = 20)
     private String nickname;  //유저닉네임

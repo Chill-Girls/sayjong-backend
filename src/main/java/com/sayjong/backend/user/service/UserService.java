@@ -28,8 +28,8 @@ public class UserService {
     @Transactional
     public User registerUser(UserSignUpRequestDto requestDto) {  //회원가입
         //이메일 중복 확인
-        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        if (userRepository.findByLoginId(requestDto.getLoginId()).isPresent()) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
 
         //비밀번호 암호화
@@ -37,7 +37,7 @@ public class UserService {
 
         //사용자 정보 생성
         User newUser = User.builder()
-                .email(requestDto.getEmail())
+                .loginId(requestDto.getLoginId())
                 .userPassword(encodedPassword) //암호화된 비밀번호로 저장
                 .nickname(requestDto.getNickname())
                 .build();
@@ -49,7 +49,7 @@ public class UserService {
     @Transactional
     public TokenInfo login(UserLoginRequestDto requestDto) { //로그인
         //AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getUserPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(requestDto.getLoginId(), requestDto.getUserPassword());
 
         //비밀번호 일치 여부 검증
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -58,8 +58,8 @@ public class UserService {
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         //DB에서 사용자 정보를 찾아 Refresh Token저장
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+        User user = userRepository.findByLoginId(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 아이디를 가진 사용자를 찾을 수 없습니다."));
         user.updateRefreshToken(tokenInfo.getRefreshToken());
 
         return tokenInfo;
@@ -78,7 +78,7 @@ public class UserService {
 
         //사용자 정보를 바탕으로 새로운 인증 객체 생성
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
+                .username(user.getLoginId())
                 .password("")
                 .roles("USER")
                 .build();
