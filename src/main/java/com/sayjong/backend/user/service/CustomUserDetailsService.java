@@ -17,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     //사용자가 입력한 아이디를 가진 User 객체가 실제로 존재하는지 확인
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
+        return userRepository.findByLoginId(username)
                 .map(this::createUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
     }
@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     //User 객체를 스프링 시큐리티가 사용하는 표준 사용자 정보 형식으로 변환
     private UserDetails createUserDetails(User user) {
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
+                .username(user.getLoginId())
                 .password(user.getUserPassword())
                 .roles("USER") //기본 역할 부여
                 .build();

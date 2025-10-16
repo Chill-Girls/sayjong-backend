@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByEmail(String email); //이메일로 사용자를 찾음
+    Optional<User> findByLoginId(String loginId); //아이디로 사용자를 찾음
     Optional<User> findByRefreshToken(String refreshToken); //리프레시 토큰으로 사용자를 찾음
 }

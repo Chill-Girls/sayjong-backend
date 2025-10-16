@@ -42,8 +42,8 @@ public class UserController {
             return ResponseEntity.ok(tokenInfo);
         } catch (AuthenticationException e) {
             //이메일 또는 비밀번호가 틀린 경우
-            log.warn("Login failed for email: {}", requestDto.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이메일 또는 비밀번호가 일치하지 않습니다.");
+            log.warn("Login failed for loginId: {}", requestDto.getLoginId());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 
