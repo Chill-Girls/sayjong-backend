@@ -1,10 +1,13 @@
 package com.sayjong.backend.user.controller;
 
+import com.sayjong.backend.config.JwtTokenProvider;
+import com.sayjong.backend.config.LogoutAccessTokenDenyList;
 import com.sayjong.backend.user.dto.TokenInfo;
 import com.sayjong.backend.user.dto.TokenRefreshRequestDto;
 import com.sayjong.backend.user.dto.UserLoginRequestDto;
 import com.sayjong.backend.user.dto.UserSignUpRequestDto;
 import com.sayjong.backend.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final LogoutAccessTokenDenyList logoutAccessTokenDenyList;
+    private final JwtTokenProvider jwtTokenProvider;
 
     //회원가입
     @PostMapping("/signup")
@@ -58,5 +63,17 @@ public class UserController {
             log.warn("Token refresh failed: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+    }
+
+    //로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String accessToken = jwtTokenProvider.resolveToken(request);
+
+        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
+            logoutAccessTokenDenyList.add(accessToken);
+        }
+
+        return ResponseEntity.ok("성공적으로 로그아웃되었습니다.");
     }
 }
