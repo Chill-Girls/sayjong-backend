@@ -11,25 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-//TODO(jiho): 빠른 healthcheck를 위해 임시로 security를 비활성화합니다. 제거 예정!
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	/*@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			// CSRF 보호 비활성화 (개발 초기 단계에서는 편리함을 위해 비활성화)
-			.csrf(csrf -> csrf.disable())
 
-			// 모든 HTTP 요청에 대한 접근 허용 설정
-			.authorizeHttpRequests(auth -> auth
-				// 모든 요청(anyRequest)을 허용(permitAll)
-				.anyRequest().permitAll()
-			);
-
-		return http.build();
-	}*/
 	private final JwtTokenProvider jwtTokenProvider;
 	private final LogoutAccessTokenDenyList logoutAccessTokenDenyList;
 
