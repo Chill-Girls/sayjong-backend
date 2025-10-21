@@ -31,6 +31,7 @@ public class SecurityConfig {
 		return http.build();
 	}*/
 	private final JwtTokenProvider jwtTokenProvider;
+	private final LogoutAccessTokenDenyList logoutAccessTokenDenyList;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,12 +49,13 @@ public class SecurityConfig {
 
 				//요청 경로별 권한 설정
 				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/auth/logout").authenticated()
 						.requestMatchers("/auth/**").permitAll()  //해당 경로는 모두 허용
 						.anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
 				)
 
 				//JWT 인증 필터
-				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,logoutAccessTokenDenyList), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
