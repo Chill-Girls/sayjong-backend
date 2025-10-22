@@ -1,11 +1,13 @@
 package com.sayjong.backend.user.controller;
 
+import com.sayjong.backend.user.dto.MessageResponseDto;
 import com.sayjong.backend.user.dto.MyPageResponseDto;
 import com.sayjong.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +27,15 @@ public class UserController {
         MyPageResponseDto myPageInfo = userService.getMyPageInfo(loginId);
 
         return ResponseEntity.ok(myPageInfo);
+    }
 
+    //회원 탈퇴
+    @DeleteMapping("/me")
+    public ResponseEntity<MessageResponseDto> deleteUser(
+            @AuthenticationPrincipal UserDetails userDetails){
+        String loginId = userDetails.getUsername();
+        userService.deleteUSer(loginId);
+
+        return ResponseEntity.ok(new MessageResponseDto("회원 탈퇴가 완료되었습니다."));
     }
 }
