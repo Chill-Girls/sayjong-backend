@@ -1,4 +1,4 @@
-package com.sayjong.backend.user.service;
+package com.sayjong.backend.auth.service;
 
 import com.sayjong.backend.user.domain.User;
 import com.sayjong.backend.user.repository.UserRepository;

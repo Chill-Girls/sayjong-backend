@@ -1,5 +1,8 @@
-package com.sayjong.backend.config;
+package com.sayjong.backend.global.config;
 
+import com.sayjong.backend.global.jwt.JwtAuthenticationFilter;
+import com.sayjong.backend.global.jwt.JwtTokenProvider;
+import com.sayjong.backend.global.jwt.LogoutAccessTokenDenyList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +40,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/auth/logout").authenticated()
 						.requestMatchers("/auth/**").permitAll()  //해당 경로는 모두 허용
+						.requestMatchers("/api/users/**").authenticated()
 						.anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
 				)
 

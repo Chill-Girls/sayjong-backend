@@ -1,12 +1,11 @@
-package com.sayjong.backend.user.dto;
+package com.sayjong.backend.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserSignUpRequestDto {
+public class UserLoginRequestDto {
     private String loginId;
     private String userPassword;
-    private String nickname;
 }
