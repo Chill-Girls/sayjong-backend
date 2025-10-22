@@ -1,10 +1,10 @@
-package com.sayjong.backend.user.service;
+package com.sayjong.backend.auth.service;
 
 import com.sayjong.backend.config.JwtTokenProvider;
 import com.sayjong.backend.user.domain.User;
-import com.sayjong.backend.user.dto.TokenInfo;
-import com.sayjong.backend.user.dto.UserLoginRequestDto;
-import com.sayjong.backend.user.dto.UserSignUpRequestDto;
+import com.sayjong.backend.auth.dto.TokenInfo;
+import com.sayjong.backend.auth.dto.UserLoginRequestDto;
+import com.sayjong.backend.auth.dto.UserSignUpRequestDto;
 import com.sayjong.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

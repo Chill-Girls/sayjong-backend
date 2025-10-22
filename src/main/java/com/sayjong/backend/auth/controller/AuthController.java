@@ -1,12 +1,12 @@
-package com.sayjong.backend.user.controller;
+package com.sayjong.backend.auth.controller;
 
 import com.sayjong.backend.config.JwtTokenProvider;
 import com.sayjong.backend.config.LogoutAccessTokenDenyList;
-import com.sayjong.backend.user.dto.TokenInfo;
-import com.sayjong.backend.user.dto.TokenRefreshRequestDto;
-import com.sayjong.backend.user.dto.UserLoginRequestDto;
-import com.sayjong.backend.user.dto.UserSignUpRequestDto;
-import com.sayjong.backend.user.service.UserService;
+import com.sayjong.backend.auth.dto.TokenInfo;
+import com.sayjong.backend.auth.dto.TokenRefreshRequestDto;
+import com.sayjong.backend.auth.dto.UserLoginRequestDto;
+import com.sayjong.backend.auth.dto.UserSignUpRequestDto;
+import com.sayjong.backend.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +24,9 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-public class UserController {
+public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
     private final LogoutAccessTokenDenyList logoutAccessTokenDenyList;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserSignUpRequestDto requestDto) {
         try {
-            userService.registerUser(requestDto);
+            authService.registerUser(requestDto);
             return ResponseEntity.status(HttpStatus.CREATED).
                     body(Map.of("message", "회원가입이 성공적으로 완료되었습니다."));
         } catch (IllegalArgumentException e) {
@@ -47,7 +47,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDto requestDto) {
         try {
-            TokenInfo tokenInfo = userService.login(requestDto);
+            TokenInfo tokenInfo = authService.login(requestDto);
             return ResponseEntity.ok(tokenInfo);
         } catch (AuthenticationException e) {
             //이메일 또는 비밀번호가 틀린 경우
@@ -61,7 +61,7 @@ public class UserController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody TokenRefreshRequestDto requestDto) {
         try {
-            TokenInfo tokenInfo = userService.reissueToken(requestDto.getRefreshToken());
+            TokenInfo tokenInfo = authService.reissueToken(requestDto.getRefreshToken());
             return ResponseEntity.ok(tokenInfo);
         } catch (RuntimeException e) {
             //유효하지 않은 토큰이나 사용자를 찾을 수 없을 때
