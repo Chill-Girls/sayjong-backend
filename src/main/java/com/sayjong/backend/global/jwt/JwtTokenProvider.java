@@ -1,4 +1,4 @@
-package com.sayjong.backend.config;
+package com.sayjong.backend.global.jwt;
 
 import com.sayjong.backend.auth.dto.TokenInfo;
 import io.jsonwebtoken.*;

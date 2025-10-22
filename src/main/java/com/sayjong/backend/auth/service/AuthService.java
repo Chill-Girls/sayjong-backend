@@ -1,6 +1,6 @@
 package com.sayjong.backend.auth.service;
 
-import com.sayjong.backend.config.JwtTokenProvider;
+import com.sayjong.backend.global.jwt.JwtTokenProvider;
 import com.sayjong.backend.user.domain.User;
 import com.sayjong.backend.auth.dto.TokenInfo;
 import com.sayjong.backend.auth.dto.UserLoginRequestDto;

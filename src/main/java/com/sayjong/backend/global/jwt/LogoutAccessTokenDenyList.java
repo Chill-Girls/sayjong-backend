@@ -1,4 +1,4 @@
-package com.sayjong.backend.config;
+package com.sayjong.backend.global.jwt;
 
 import org.springframework.stereotype.Component;
 import java.util.Collections;

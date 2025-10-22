@@ -1,6 +1,6 @@
 package com.sayjong.backend.user.controller;
 
-import com.sayjong.backend.user.dto.MessageResponseDto;
+import com.sayjong.backend.global.dto.MessageResponseDto;
 import com.sayjong.backend.user.dto.MyPageResponseDto;
 import com.sayjong.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;

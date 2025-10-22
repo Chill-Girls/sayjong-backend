@@ -1,5 +1,8 @@
-package com.sayjong.backend.config;
+package com.sayjong.backend.global.config;
 
+import com.sayjong.backend.global.jwt.JwtAuthenticationFilter;
+import com.sayjong.backend.global.jwt.JwtTokenProvider;
+import com.sayjong.backend.global.jwt.LogoutAccessTokenDenyList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
