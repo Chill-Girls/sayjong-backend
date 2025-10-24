@@ -39,8 +39,7 @@ public class SecurityConfig {
 				//요청 경로별 권한 설정
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/auth/logout").authenticated()
-						.requestMatchers("/auth/**").permitAll()  //해당 경로는 모두 허용
-						.requestMatchers("/api/users/**").authenticated()
+						.requestMatchers("/auth/**", "/songs").permitAll()  //해당 경로는 모두 허용
 						.anyRequest().authenticated()  // 나머지 모든 요청은 인증 필요
 				)
 
