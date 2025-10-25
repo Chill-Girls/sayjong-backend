@@ -23,6 +23,10 @@ public class Song {
     @Column(nullable = false, length = 30)
     private String title;       //노래제목
 
+	@Size(max = 30)
+	@Column(nullable = false, length = 30)
+	private String titleEng;    //노래 영문 제목
+
     @Size(max = 20)
     @Column(nullable = false, length = 20)
     private String singer;      //가수

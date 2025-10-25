@@ -8,7 +8,8 @@ import lombok.*;
 @Entity
 @Table(
         name = "lyric_line",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"line_no", "song_id"})} //한 곡 안에서 각 소절번호는 유일해야함
+		// DB에서 (song_id, line_no) 조합이 중복되지 않도록 유니크 제약조건 설정
+		uniqueConstraints = {@UniqueConstraint(columnNames = {"song_id", "line_no"})}
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,8 +19,11 @@ public class LyricLine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "lyric_line_id")
+	private Long lyricLineId;
+
     @Column(name = "line_no", nullable = false)
-    private Integer lineNo;  //소절번호(PK)
+    private Integer lineNo;  //소절번호 (a곡의 n번째 소절)
 
 	@Size(max = 100)
 	@Column(nullable = false, length = 100)

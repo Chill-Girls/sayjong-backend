@@ -7,7 +7,8 @@ import lombok.*;
 @Entity
 @Table(
         name = "lyric_syllable",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"syl_no", "line_no"})}
+		// 한 소절(lyric_line_id) 안에서 음절 번호(syl_no)가 중복되지 않도록 설정
+		uniqueConstraints = {@UniqueConstraint(columnNames = {"lyric_line_id", "syl_no"})}
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,8 +18,11 @@ public class LyricSyllable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Integer sylNo; //음절번호(PK)
+	@Column(name = "lyric_syllable_id")
+	private Long lyricSyllableId;
+
+	@Column(nullable = false)
+    private Integer sylNo; //음절번호 (소절 내 순서)
 
     @Size(max = 20)
     @Column(nullable = false, length = 20)
@@ -33,6 +37,6 @@ public class LyricSyllable {
     private String nativeAudioUrl; //원어민(한국어발음)오디오 URL
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "line_no", nullable = false)
-    private LyricLine lyricLine; //소절번호
+	@JoinColumn(name = "lyric_line_id", nullable = false)
+	private LyricLine lyricLine;
 }
