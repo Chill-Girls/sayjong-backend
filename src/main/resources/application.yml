@@ -26,3 +26,13 @@ spring:
 # JWT 설정 추가
 jwt:
   secret: sayjong-backend-secret-key-for-jwt-token-generation
+
+services:
+  node-worker:
+    baseUrl: http://host.docker.internal:3000
+
+logging:
+  level:
+    com.sayjong.backend: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
