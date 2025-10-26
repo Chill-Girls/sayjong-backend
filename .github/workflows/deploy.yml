@@ -21,4 +21,4 @@ jobs:
             git pull origin main
             echo "${{ secrets.DOT_ENV }}" > .env
             docker-compose up -d --build
-            docker image prune -f
+            docker system prune -f
