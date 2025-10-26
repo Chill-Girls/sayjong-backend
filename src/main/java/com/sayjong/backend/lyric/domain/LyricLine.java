@@ -25,16 +25,16 @@ public class LyricLine {
     @Column(name = "line_no", nullable = false)
     private Integer lineNo;  //소절번호 (a곡의 n번째 소절)
 
-	@Size(max = 100)
-	@Column(nullable = false, length = 100)
+	@Size(max = 255)
+	@Column(nullable = false, length = 255)
 	private String originalText;  //원본 가사 (어떤 언어든 저장)
 
-    @Size(max = 40)
-    @Column(nullable = false, length = 40)
+    @Size(max = 255)
+    @Column(nullable = false, length = 255)
     private String textRomaja; //로마자표기 (영어 가사이면 그냥 원본 가사 유지)
 
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
+    @Size(max = 255)
+    @Column(nullable = false, length = 255)
     private String textEng; //영어해석 (영어 가사이면 그냥 원본 가사 유지)
 
     @Lob
