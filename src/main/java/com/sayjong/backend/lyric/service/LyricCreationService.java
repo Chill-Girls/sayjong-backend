@@ -15,7 +15,6 @@ import com.sayjong.backend.lyric.repository.LyricLineRepository;
 import com.sayjong.backend.lyric.repository.LyricSyllableRepository;
 import com.sayjong.backend.song.domain.Song;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,56 +22,58 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class LyricCreationService {
-	private final LyricLineRepository lyricLineRepository;
-	private final LyricSyllableRepository lyricSyllableRepository;
+    private final LyricLineRepository lyricLineRepository;
+    private final LyricSyllableRepository lyricSyllableRepository;
 
-	@Transactional
-	public void saveLyrics(ContentSuccessResult result, Song song) {
-		log.info("[LyricCreation] Saving lyrics for songId: {}", result.songId());
+    @Transactional
+    public void saveLyrics(ContentSuccessResult result, Song song) {
+        log.info("[LyricCreation] Saving lyrics for songId: {}",
+                result.songId());
 
-		List<LyricLine> linesToSave = new ArrayList<>();
-		List<LyricSyllable> syllablesToSave = new ArrayList<>();
-		List<ProcessedLyricLine> lineDtos = result.lines();
+        List<LyricLine> linesToSave = new ArrayList<>();
+        List<LyricSyllable> syllablesToSave = new ArrayList<>();
+        List<ProcessedLyricLine> lineDtos = result.lines();
 
-		for (int i = 0; i < lineDtos.size(); i++) {
-			ProcessedLyricLine lineDto = lineDtos.get(i);
-			int lineNo = i + 1;
+        for (int i = 0; i < lineDtos.size(); i++) {
+            ProcessedLyricLine lineDto = lineDtos.get(i);
+            int lineNo = i + 1;
 
-			LyricLine lyricLine = LyricLine.builder()
-				.lineNo(lineNo)
-				.originalText(lineDto.originalText())
-				.textRomaja(lineDto.textRomaja())
-				.textEng(lineDto.textEng())
-				.nativeAudioUrl(lineDto.nativeAudioUrl())
-				.startTime(Long.parseLong(lineDto.startTime()))
-				.song(song)
-				.build();
+            LyricLine lyricLine = LyricLine.builder()
+                    .lineNo(lineNo)
+                    .originalText(lineDto.originalText())
+                    .textRomaja(lineDto.textRomaja())
+                    .textEng(lineDto.textEng())
+                    .nativeAudioUrl(lineDto.nativeAudioUrl())
+                    .startTime(Long.parseLong(lineDto.startTime()))
+                    .song(song)
+                    .build();
 
-			linesToSave.add(lyricLine);
+            linesToSave.add(lyricLine);
 
-			List<ProcessedLyricSyllable> syllableDtos = lineDto.syllables();
-			if (syllableDtos != null && !syllableDtos.isEmpty()) {
-				for (int j = 0; j < syllableDtos.size(); j++) {
-					ProcessedLyricSyllable syllableDto = syllableDtos.get(j);
-					int sylNo = j + 1;
+            List<ProcessedLyricSyllable> syllableDtos = lineDto.syllables();
+            if (syllableDtos != null && !syllableDtos.isEmpty()) {
+                for (int j = 0; j < syllableDtos.size(); j++) {
+                    ProcessedLyricSyllable syllableDto = syllableDtos.get(j);
+                    int sylNo = j + 1;
 
-					LyricSyllable lyricSyllable = LyricSyllable.builder()
-						.sylNo(sylNo)
-						.textKor(syllableDto.textKor())
-						.textRomaja(syllableDto.textRomaja())
-						.nativeAudioUrl(syllableDto.nativeAudioUrl())
-						.lyricLine(lyricLine)
-						.build();
+                    LyricSyllable lyricSyllable = LyricSyllable.builder()
+                            .sylNo(sylNo)
+                            .textKor(syllableDto.textKor())
+                            .textRomaja(syllableDto.textRomaja())
+                            .nativeAudioUrl(syllableDto.nativeAudioUrl())
+                            .lyricLine(lyricLine)
+                            .build();
 
-					syllablesToSave.add(lyricSyllable);
-				}
-			}
-		}
+                    syllablesToSave.add(lyricSyllable);
+                }
+            }
+        }
 
-		lyricLineRepository.saveAll(linesToSave);
-		lyricSyllableRepository.saveAll(syllablesToSave);
+        lyricLineRepository.saveAll(linesToSave);
+        lyricSyllableRepository.saveAll(syllablesToSave);
 
-		log.info("[LyricCreation] Successfully saved {} lines and {} syllables for songId: {}",
-			linesToSave.size(), syllablesToSave.size(), song.getSongId());
-	}
+        log.info(
+                "[LyricCreation] Successfully saved {} lines and {} syllables for songId: {}",
+                linesToSave.size(), syllablesToSave.size(), song.getSongId());
+    }
 }

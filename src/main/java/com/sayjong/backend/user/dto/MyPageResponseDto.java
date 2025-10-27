@@ -1,6 +1,7 @@
 package com.sayjong.backend.user.dto;
 
 import com.sayjong.backend.user.domain.User;
+
 import lombok.Builder;
 import lombok.Getter;
 

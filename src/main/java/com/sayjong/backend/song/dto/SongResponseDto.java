@@ -8,8 +8,7 @@ public record SongResponseDto(
         String singer,
         String trackId,
         String coverUrl,
-		String titleEng
-) {
+        String titleEng) {
     public static SongResponseDto fromEntity(Song song) {
         return new SongResponseDto(
                 song.getSongId(),
@@ -17,7 +16,6 @@ public record SongResponseDto(
                 song.getSinger(),
                 song.getTrackId(),
                 song.getCoverUrl(),
-				song.getTitleEng()
-        );
+                song.getTitleEng());
     }
 }

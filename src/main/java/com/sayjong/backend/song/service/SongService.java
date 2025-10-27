@@ -1,14 +1,16 @@
 package com.sayjong.backend.song.service;
 
-import com.sayjong.backend.song.domain.Song;
-import com.sayjong.backend.song.dto.SongResponseDto;
-import com.sayjong.backend.song.repository.SongRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.sayjong.backend.song.domain.Song;
+import com.sayjong.backend.song.dto.SongResponseDto;
+import com.sayjong.backend.song.repository.SongRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class SongService {
 
     private final SongRepository songRepository;
 
-    //노래 목록 조회
+    // 노래 목록 조회
     public List<SongResponseDto> getAllSongs() {
         List<Song> songs = songRepository.findAll();
 

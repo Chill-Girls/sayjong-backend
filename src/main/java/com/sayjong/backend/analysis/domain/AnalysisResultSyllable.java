@@ -1,8 +1,10 @@
 package com.sayjong.backend.analysis.domain;
 
-import com.sayjong.backend.lyric.domain.LyricSyllable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+
+import com.sayjong.backend.lyric.domain.LyricSyllable;
+
 import lombok.*;
 
 @Entity
@@ -20,12 +22,12 @@ public class AnalysisResultSyllable {
 
     @Size(max = 100)
     @Column(nullable = false, length = 100)
-    private String feedbackText; //피드백 문구
+    private String feedbackText; // 피드백 문구
 
     @Column(nullable = false)
-    private Integer pronounceOk; //발음일치율
+    private Integer pronounceOk; // 발음일치율
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "syl_no", nullable = false)
-    private LyricSyllable lyricSyllable; //음절번호
+    private LyricSyllable lyricSyllable; // 음절번호
 }

@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.sayjong.backend.lyric.domain.LyricSyllable;
 
 @Repository
-public interface LyricSyllableRepository extends JpaRepository<LyricSyllable, Long> {
+public interface LyricSyllableRepository
+        extends JpaRepository<LyricSyllable, Long> {
 }
