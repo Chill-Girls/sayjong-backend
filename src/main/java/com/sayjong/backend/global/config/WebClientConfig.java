@@ -9,14 +9,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class WebClientConfig {
-	@Value("${services.node-worker.baseUrl}")
-	private String nodeWorkerBaseUrl;
+    @Value("${services.node-worker.baseUrl}")
+    private String nodeWorkerBaseUrl;
 
-	@Bean
-	public WebClient nodeWorkerWebClient() {
-		return WebClient.builder()
-			.baseUrl(nodeWorkerBaseUrl)
-			.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.build();
-	}
+    @Bean
+    public WebClient nodeWorkerWebClient() {
+        return WebClient.builder()
+                .baseUrl(nodeWorkerBaseUrl)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE,
+                        MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
 }

@@ -1,9 +1,5 @@
 package com.sayjong.backend.user.controller;
 
-import com.sayjong.backend.global.dto.MessageResponseDto;
-import com.sayjong.backend.user.dto.MyPageResponseDto;
-import com.sayjong.backend.user.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sayjong.backend.global.dto.MessageResponseDto;
+import com.sayjong.backend.user.dto.MyPageResponseDto;
+import com.sayjong.backend.user.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class UserController {
 
     private final UserService userService;
 
-    //마이페이지 조회
+    // 마이페이지 조회
     @GetMapping("/me")
     public ResponseEntity<MyPageResponseDto> getMyPageInfo(
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -29,10 +31,10 @@ public class UserController {
         return ResponseEntity.ok(myPageInfo);
     }
 
-    //회원 탈퇴
+    // 회원 탈퇴
     @DeleteMapping("/me")
     public ResponseEntity<MessageResponseDto> deleteUser(
-            @AuthenticationPrincipal UserDetails userDetails){
+            @AuthenticationPrincipal UserDetails userDetails) {
         String loginId = userDetails.getUsername();
         userService.deleteUSer(loginId);
 
