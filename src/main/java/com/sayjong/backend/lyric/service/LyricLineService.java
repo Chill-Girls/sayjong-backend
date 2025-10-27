@@ -20,6 +20,7 @@ public class LyricLineService {
     private final LyricLineRepository lyricLineRepository;
     private final SongRepository songRepository;
 
+    // 전체 소절 조회
     public List<LyricLineResponseDto> getLyricLinesBySongId(Integer songId) {
         if (!songRepository.existsById(songId)) {
             throw new EntityNotFoundException("Song not found with id: " + songId);
@@ -30,5 +31,14 @@ public class LyricLineService {
         return lyricLines.stream()
                 .map(LyricLineResponseDto::from)
                 .collect(Collectors.toList());
+    }
+
+    // 특정 소절 조회
+    public LyricLineResponseDto getLyricLineBySongIdAndLineNo(Integer songId, Integer lineNo) {
+        LyricLine lyricLine = lyricLineRepository.findBySongSongIdAndLineNo(songId, lineNo)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Lyric line not found for songId: " + songId + " and lineNo: " + lineNo
+                ));
+        return LyricLineResponseDto.from(lyricLine);
     }
 }
