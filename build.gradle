@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'com.sayjong'
@@ -48,11 +49,27 @@ dependencies {
 
     //WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-    //Log
-    annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        eclipse().configFile('java-formatter.xml')
+        removeUnusedImports()
+        importOrder(
+                'java',
+                'jakarta',
+                'org.springframework',
+                'org',
+                'com',
+                '',
+                '\\#'
+        )
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
