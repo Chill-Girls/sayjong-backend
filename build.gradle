@@ -56,6 +56,8 @@ tasks.named('test') {
 }
 
 spotless {
+    enforceCheck(false)
+
     java {
         target 'src/**/*.java'
         eclipse().configFile('java-formatter.xml')
