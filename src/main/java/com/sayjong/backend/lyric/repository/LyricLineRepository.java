@@ -5,7 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.sayjong.backend.lyric.domain.LyricLine;
 
+import java.util.List;
+
 @Repository
 public interface LyricLineRepository extends JpaRepository<LyricLine, Long> {
     boolean existsBySong_SongId(Integer songId);
+
+    List<LyricLine> findAllBySongSongIdOrderByLineNoAsc(Integer songId);
 }
