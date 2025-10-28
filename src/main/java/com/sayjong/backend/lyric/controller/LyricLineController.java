@@ -2,7 +2,9 @@ package com.sayjong.backend.lyric.controller;
 
 import com.sayjong.backend.lyric.domain.LyricLine;
 import com.sayjong.backend.lyric.dto.response.LyricLineResponseDto;
+import com.sayjong.backend.lyric.dto.response.LyricSyllableResponseDto;
 import com.sayjong.backend.lyric.service.LyricLineService;
+import com.sayjong.backend.lyric.service.LyricSyllableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,7 @@ import java.util.List;
 public class LyricLineController {
 
     private final LyricLineService lyricLineService;
+    private final LyricSyllableService lyricSyllableService;
 
     // 특정 노래의 전체 소절 정보 조회
     @GetMapping("/{songId}/lyriclines")
@@ -39,5 +42,19 @@ public class LyricLineController {
     ) {
         LyricLineResponseDto lyricLineDto = lyricLineService.getLyricLineBySongIdAndLineNo(songId, lineNo);
         return ResponseEntity.ok(lyricLineDto);
+    }
+
+    // 특정 노래의 소절별 음절 정보 가져오기
+    @GetMapping("/{songId}/lyriclines/{lineNo}/syllables/{sylNo}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<LyricSyllableResponseDto> getSpecificSyllable(
+            @PathVariable("songId") Integer songId,
+            @PathVariable("lineNo") Integer lineNo,
+            @PathVariable("sylNo") Integer sylNo
+    ) {
+        LyricSyllableResponseDto syllableDto = lyricSyllableService
+                .getSpecificSyllable(songId, lineNo, sylNo);
+
+        return ResponseEntity.ok(syllableDto);
     }
 }
