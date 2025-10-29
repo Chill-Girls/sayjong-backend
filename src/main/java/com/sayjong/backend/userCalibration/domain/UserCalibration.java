@@ -28,7 +28,7 @@ public class UserCalibration {
     // calibration 좌표
     @Lob
     @Column(columnDefinition = "MEDIUMTEXT")
-    private String rawCalibrationJson; //
+    private String rawCalibrationJson;
 
     // 좌표가 저장된 시간 (UTC)
     private Instant calibratedAt;
