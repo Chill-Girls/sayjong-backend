@@ -48,4 +48,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", e.getMessage()));
     }
+
+    // 다른 @ExceptionHandler 에서 잡지 못한 예외 처리
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleAllExceptions(Exception e) {
+        log.error("---Global Exception Handler: Unhandled Error Occurred---", e);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponseDto("서버 내부 오류가 발생했습니다."));
+    }
 }
