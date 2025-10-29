@@ -1,16 +1,15 @@
 package com.sayjong.backend.song.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.sayjong.backend.song.domain.Song;
 import com.sayjong.backend.song.dto.SongResponseDto;
 import com.sayjong.backend.song.repository.SongRepository;
-
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,5 +25,12 @@ public class SongService {
         return songs.stream()
                 .map(SongResponseDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public SongResponseDto getSongById(Integer songId) {
+        Song song = songRepository.findById(songId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Song not found with id: " + songId));
+        return SongResponseDto.fromEntity(song);
     }
 }
