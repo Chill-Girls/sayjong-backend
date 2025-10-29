@@ -1,16 +1,15 @@
 package com.sayjong.backend.song.controller;
 
-import java.util.List;
-
+import com.sayjong.backend.song.dto.SongResponseDto;
+import com.sayjong.backend.song.service.SongService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sayjong.backend.song.dto.SongResponseDto;
-import com.sayjong.backend.song.service.SongService;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +23,12 @@ public class SongController {
     public ResponseEntity<List<SongResponseDto>> getAllSongs() {
         List<SongResponseDto> songs = songService.getAllSongs();
         return ResponseEntity.ok(songs);
+    }
+
+    @GetMapping("/{songId}")
+    public ResponseEntity<SongResponseDto> getSongById(
+            @PathVariable("songId") Integer songId) {
+        SongResponseDto song = songService.getSongById(songId);
+        return ResponseEntity.ok(song);
     }
 }
