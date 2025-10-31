@@ -11,13 +11,15 @@ public class LyricSyllableResponseDto {
     private final Integer sylNo;
     private final String textKor;
     private final String textRomaja;
+    private String nativeAudioUrl;
 
     @Builder
-    public LyricSyllableResponseDto(Long lyricSyllableId, Integer sylNo, String textKor, String textRomaja) {
+    public LyricSyllableResponseDto(Long lyricSyllableId, Integer sylNo, String textKor, String textRomaja, String nativeAudioUrl) {
         this.lyricSyllableId = lyricSyllableId;
         this.sylNo = sylNo;
         this.textKor = textKor;
         this.textRomaja = textRomaja;
+        this.nativeAudioUrl = nativeAudioUrl;
     }
 
     public static LyricSyllableResponseDto from(LyricSyllable syllable) {
@@ -26,6 +28,7 @@ public class LyricSyllableResponseDto {
                 .sylNo(syllable.getSylNo())
                 .textKor(syllable.getTextKor())
                 .textRomaja(syllable.getTextRomaja())
+                .nativeAudioUrl(syllable.getNativeAudioUrl())
                 .build();
     }
 }
