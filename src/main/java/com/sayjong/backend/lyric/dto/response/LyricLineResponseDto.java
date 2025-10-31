@@ -11,15 +11,17 @@ public class LyricLineResponseDto {
     private final String originalText;
     private final String textRomaja;
     private final String textEng;
+    private String nativeAudioUrl;
     private final Long startTime;
 
     @Builder
-    public LyricLineResponseDto(Long lyricLineId, Integer lineNo, String originalText, String textRomaja, String textEng, Long startTime) {
+    public LyricLineResponseDto(Long lyricLineId, Integer lineNo, String originalText, String textRomaja, String textEng, String nativeAudioUrl, Long startTime) {
         this.lyricLineId = lyricLineId;
         this.lineNo = lineNo;
         this.originalText = originalText;
         this.textRomaja = textRomaja;
         this.textEng = textEng;
+        this.nativeAudioUrl = nativeAudioUrl;
         this.startTime = startTime;
     }
 
@@ -30,6 +32,7 @@ public class LyricLineResponseDto {
                 .originalText(lyricLine.getOriginalText())
                 .textRomaja(lyricLine.getTextRomaja())
                 .textEng(lyricLine.getTextEng())
+                .nativeAudioUrl(lyricLine.getNativeAudioUrl())
                 .startTime(lyricLine.getStartTime())
                 .build();
     }
