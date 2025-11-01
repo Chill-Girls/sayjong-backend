@@ -3,6 +3,8 @@ package com.sayjong.backend.lyric.service;
 import com.sayjong.backend.lyric.domain.LyricLine;
 import com.sayjong.backend.lyric.dto.response.LyricLineResponseDto;
 import com.sayjong.backend.lyric.repository.LyricLineRepository;
+import com.sayjong.backend.song.domain.Song;
+import com.sayjong.backend.song.dto.SongLyricResponseDto;
 import com.sayjong.backend.song.repository.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +23,25 @@ public class LyricLineService {
     private final SongRepository songRepository;
 
     // 전체 소절 조회
-    public List<LyricLineResponseDto> getLyricLinesBySongId(Integer songId) {
-        if (!songRepository.existsById(songId)) {
-            throw new EntityNotFoundException("Song not found with id: " + songId);
-        }
-
+    public SongLyricResponseDto getLyricLinesBySongId(Integer songId) {
         List<LyricLine> lyricLines = lyricLineRepository.findAllBySongSongIdOrderByLineNoAsc(songId);
 
-        return lyricLines.stream()
+        if (lyricLines.isEmpty()) {
+            throw new EntityNotFoundException("Song or lyrics not found for ID: " + songId);
+        }
+
+        List<LyricLineResponseDto> lyricDtos = lyricLines.stream()
                 .map(LyricLineResponseDto::from)
-                .collect(Collectors.toList());
+                .toList();
+        Song song = lyricLines.get(0).getSong();
+
+        // SongLyricResponseDto를 조립하여 반환
+        return new SongLyricResponseDto(
+                song.getSongId(),
+                song.getTitle(),
+                song.getSinger(),
+                lyricDtos
+        );
     }
 
     // 특정 소절 조회
