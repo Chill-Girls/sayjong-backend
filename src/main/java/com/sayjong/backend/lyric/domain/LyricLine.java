@@ -1,17 +1,15 @@
 package com.sayjong.backend.lyric.domain;
 
+import com.sayjong.backend.song.domain.Song;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
-import com.sayjong.backend.song.domain.Song;
-
 import lombok.*;
 
 @Entity
 @Table(name = "lyric_line",
         // DB에서 (song_id, line_no) 조합이 중복되지 않도록 유니크 제약조건 설정
         uniqueConstraints = {
-            @UniqueConstraint(columnNames = { "song_id", "line_no" }) })
+                @UniqueConstraint(columnNames = { "song_id", "line_no" }) })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -48,4 +46,8 @@ public class LyricLine {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id", nullable = false)
     private Song song; // 노래식별자
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String syllableTimings; // 소절 타이밍 (JSON)
 }
