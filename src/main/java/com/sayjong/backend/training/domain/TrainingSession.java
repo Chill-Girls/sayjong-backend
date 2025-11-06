@@ -26,10 +26,10 @@ public class TrainingSession {
     private Integer sessionId; // 학습목록ID(PK)
 
     @Column
-    private LocalDateTime trainedAt; // 학습날짜
+    private Integer bestScore; // best 점수
 
     @Column
-    private Integer finalScore; // 최종점수
+    private Integer recentScore; // 가장 최근 점수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false) // 유저식별자
