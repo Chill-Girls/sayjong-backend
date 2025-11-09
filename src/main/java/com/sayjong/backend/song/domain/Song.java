@@ -3,7 +3,6 @@ package com.sayjong.backend.song.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
 import lombok.*;
 
 @Entity
@@ -40,4 +39,12 @@ public class Song {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String coverUrl; // 커버이미지 URL
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String songUrl; // 노래 URL
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String timings; // 타이밍 (JSON)
 }
