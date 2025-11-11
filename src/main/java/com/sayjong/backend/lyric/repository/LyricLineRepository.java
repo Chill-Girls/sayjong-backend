@@ -20,4 +20,10 @@ public interface LyricLineRepository extends JpaRepository<LyricLine, Long> {
 
     // 노래 특정 소절 조회
     Optional<LyricLine> findBySongSongIdAndLineNo(Integer songId, Integer lineNo);
+
+    // 특정 노래의 모든 소절을 lineNo 순으로 조회
+    @Query("SELECT ll FROM LyricLine ll " +
+            "WHERE ll.song.songId = :songId " +
+            "ORDER BY ll.lineNo ASC")
+    List<LyricLine> findAllBySongIdOrderByLineNoAsc(@Param("songId") Integer songId);
 }

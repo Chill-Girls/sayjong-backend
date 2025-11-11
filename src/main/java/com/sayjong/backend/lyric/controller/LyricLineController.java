@@ -5,6 +5,7 @@ import com.sayjong.backend.lyric.dto.response.LyricSyllableResponseDto;
 import com.sayjong.backend.lyric.service.LyricLineService;
 import com.sayjong.backend.lyric.service.LyricSyllableService;
 import com.sayjong.backend.song.dto.SongLyricResponseDto;
+import com.sayjong.backend.song.dto.SongLyricsWithSyllablesDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,17 +43,13 @@ public class LyricLineController {
         return ResponseEntity.ok(lyricLineDto);
     }
 
-    // 특정 노래의 소절별 음절 정보 가져오기
-    @GetMapping("/{songId}/lyriclines/{lineNo}/syllables/{sylNo}")
+    // 노래별 전체 음절 정보
+    @GetMapping("/{songId}/lyricSyllables")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<LyricSyllableResponseDto> getSpecificSyllable(
-            @PathVariable("songId") Integer songId,
-            @PathVariable("lineNo") Integer lineNo,
-            @PathVariable("sylNo") Integer sylNo
+    public ResponseEntity<SongLyricsWithSyllablesDto> getSongLyricsWithSyllables(
+            @PathVariable Integer songId
     ) {
-        LyricSyllableResponseDto syllableDto = lyricSyllableService
-                .getSpecificSyllable(songId, lineNo, sylNo);
-
-        return ResponseEntity.ok(syllableDto);
+        SongLyricsWithSyllablesDto response = lyricLineService.getSongLyricsWithSyllables(songId);
+        return ResponseEntity.ok(response);
     }
 }

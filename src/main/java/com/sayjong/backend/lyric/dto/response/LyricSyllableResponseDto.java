@@ -6,16 +6,13 @@ import lombok.Getter;
 
 @Getter
 public class LyricSyllableResponseDto {
-
-    private final Long lyricSyllableId;
     private final Integer sylNo;
     private final String textKor;
     private final String textRomaja;
-    private String nativeAudioUrl;
+    private final String nativeAudioUrl;
 
     @Builder
-    public LyricSyllableResponseDto(Long lyricSyllableId, Integer sylNo, String textKor, String textRomaja, String nativeAudioUrl) {
-        this.lyricSyllableId = lyricSyllableId;
+    public LyricSyllableResponseDto(Integer sylNo, String textKor, String textRomaja, String nativeAudioUrl) {
         this.sylNo = sylNo;
         this.textKor = textKor;
         this.textRomaja = textRomaja;
@@ -24,7 +21,6 @@ public class LyricSyllableResponseDto {
 
     public static LyricSyllableResponseDto from(LyricSyllable syllable) {
         return LyricSyllableResponseDto.builder()
-                .lyricSyllableId(syllable.getLyricSyllableId())
                 .sylNo(syllable.getSylNo())
                 .textKor(syllable.getTextKor())
                 .textRomaja(syllable.getTextRomaja())

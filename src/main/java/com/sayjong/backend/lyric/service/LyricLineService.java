@@ -10,8 +10,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sayjong.backend.lyric.domain.LyricSyllable;
+import com.sayjong.backend.lyric.repository.LyricSyllableRepository;
+import com.sayjong.backend.song.dto.SongLyricsWithSyllablesDto;
+import com.sayjong.backend.lyric.dto.response.LyricLineWithSyllablesDto;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +27,7 @@ public class LyricLineService {
 
     private final LyricLineRepository lyricLineRepository;
     private final SongRepository songRepository;
+    private final LyricSyllableRepository lyricSyllableRepository;
 
     // 전체 소절 조회
     public SongLyricResponseDto getLyricLinesBySongId(Integer songId) {
@@ -52,4 +59,46 @@ public class LyricLineService {
                 ));
         return LyricLineResponseDto.from(lyricLine);
     }
+
+
+    // 전체 소절 + 전체 음절 조회
+    public SongLyricsWithSyllablesDto getSongLyricsWithSyllables(Integer songId) {
+
+        // 노래 정보 조회
+        Song song = songRepository.findById(songId)
+                .orElseThrow(() -> new EntityNotFoundException("Song not found for ID: " + songId));
+
+        // 노래에 속한 모든 소절(Line) 조회
+        List<LyricLine> lines = lyricLineRepository.findAllBySongSongIdOrderByLineNoAsc(songId);
+
+        if (lines.isEmpty()) {
+            return SongLyricsWithSyllablesDto.from(song, Collections.emptyList());
+        }
+
+        // 찾은 소절에 해당하는 모든 음절(Syllable)을 한 번에 조회
+        List<Long> lineIds = lines.stream()
+                .map(LyricLine::getLyricLineId)
+                .collect(Collectors.toList());
+
+        List<LyricSyllable> allSyllables = lyricSyllableRepository.findAllByLyricLineIds(lineIds);
+
+        // 음절 리스트를 소절 기준으로 매핑
+        Map<Long, List<LyricSyllable>> syllablesByLineIdMap = allSyllables.stream()
+                .collect(Collectors.groupingBy(s -> s.getLyricLine().getLyricLineId()));
+
+        // 소절 리스트를 DTO로 변환
+        List<LyricLineWithSyllablesDto> lineDtos = lines.stream()
+                // 음절이 있는 소절만 남김 (영어 가사는 제외)
+                .filter(line -> syllablesByLineIdMap.containsKey(line.getLyricLineId()))
+                .map(line -> {
+                    List<LyricSyllable> syllablesForThisLine = syllablesByLineIdMap.get(line.getLyricLineId());
+
+                    return LyricLineWithSyllablesDto.from(line, syllablesForThisLine);
+                })
+                .collect(Collectors.toList());
+
+        // 최종 응답 DTO ('SongLyricsWithSyllablesDto') 생성
+        return SongLyricsWithSyllablesDto.from(song, lineDtos);
+    }
+
 }
