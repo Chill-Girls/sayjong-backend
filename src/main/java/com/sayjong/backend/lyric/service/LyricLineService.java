@@ -29,6 +29,19 @@ public class LyricLineService {
     private final SongRepository songRepository;
     private final LyricSyllableRepository lyricSyllableRepository;
 
+    // 문자열에 영어 알파벳이 포함되어 있는지 확인하는 메서드
+    private boolean containsEnglish(String text) {
+        if (text == null) {
+            return false;
+        }
+        for (char c : text.toCharArray()) {
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // 전체 소절 조회
     public SongLyricResponseDto getLyricLinesBySongId(Integer songId) {
         List<LyricLine> lyricLines = lyricLineRepository.findAllBySongSongIdOrderByLineNoAsc(songId);
@@ -37,10 +50,15 @@ public class LyricLineService {
             throw new EntityNotFoundException("Song or lyrics not found for ID: " + songId);
         }
 
+        Song song = lyricLines.get(0).getSong();
+
         List<LyricLineResponseDto> lyricDtos = lyricLines.stream()
+                .filter(line -> line.getOriginalText() != null &&
+                        !line.getOriginalText().isBlank() &&        // 빈 문자열/공백 제외
+                        !containsEnglish(line.getOriginalText()) && // 영어 제외
+                        !line.getOriginalText().contains("♪"))     // '♪' 기호 제외
                 .map(LyricLineResponseDto::from)
                 .toList();
-        Song song = lyricLines.get(0).getSong();
 
         // SongLyricResponseDto를 조립하여 반환
         return new SongLyricResponseDto(
@@ -75,8 +93,19 @@ public class LyricLineService {
             return SongLyricsWithSyllablesDto.from(song, Collections.emptyList());
         }
 
-        // 찾은 소절에 해당하는 모든 음절(Syllable)을 한 번에 조회
-        List<Long> lineIds = lines.stream()
+        List<LyricLine> koreanLines = lines.stream()
+                .filter(line -> line.getOriginalText() != null &&
+                        !line.getOriginalText().isBlank() &&        // 빈 문자열/공백 제외
+                        !containsEnglish(line.getOriginalText()) && // 영어 제외
+                        !line.getOriginalText().contains("♪"))     // '♪' 기호 제외
+                .collect(Collectors.toList());
+
+        if (koreanLines.isEmpty()) {
+            return SongLyricsWithSyllablesDto.from(song, Collections.emptyList());
+        }
+
+        // 필터링된 라인 ID로만 음절 조회
+        List<Long> lineIds = koreanLines.stream()
                 .map(LyricLine::getLyricLineId)
                 .collect(Collectors.toList());
 
@@ -86,13 +115,11 @@ public class LyricLineService {
         Map<Long, List<LyricSyllable>> syllablesByLineIdMap = allSyllables.stream()
                 .collect(Collectors.groupingBy(s -> s.getLyricLine().getLyricLineId()));
 
-        // 소절 리스트를 DTO로 변환
-        List<LyricLineWithSyllablesDto> lineDtos = lines.stream()
-                // 음절이 있는 소절만 남김 (영어 가사는 제외)
+        // 음절이 실제로 존재하는 라인만 남김
+        List<LyricLineWithSyllablesDto> lineDtos = koreanLines.stream()
                 .filter(line -> syllablesByLineIdMap.containsKey(line.getLyricLineId()))
                 .map(line -> {
                     List<LyricSyllable> syllablesForThisLine = syllablesByLineIdMap.get(line.getLyricLineId());
-
                     return LyricLineWithSyllablesDto.from(line, syllablesForThisLine);
                 })
                 .collect(Collectors.toList());
