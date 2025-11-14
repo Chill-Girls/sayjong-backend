@@ -29,6 +29,14 @@ public class LyricLineService {
     private final SongRepository songRepository;
     private final LyricSyllableRepository lyricSyllableRepository;
 
+    // 문자열에 한글이 하나라도 포함되어 있는지 확인하는 메서드
+    private boolean containsHangul(String text) {
+        if (text == null || text.isBlank()) {
+            return false;
+        }
+        return text.chars().anyMatch(c -> c >= '\uAC00' && c <= '\uD7A3');
+    }
+
     // 문자열에서 한글과 공백을 제외한 모든 문자 제거
     public static String cleanKoreanText(String text) {
         if (text == null) {
@@ -57,8 +65,19 @@ public class LyricLineService {
         Song song = lyricLines.get(0).getSong();
 
         List<LyricLineResponseDto> lyricDtos = lyricLines.stream()
-                .map(LyricLineResponseDto::from)
-                .filter(dto -> !dto.getOriginalText().isBlank())
+                .filter(line -> line.getOriginalText() != null && !line.getOriginalText().isBlank())
+                // 한글이 하나라도 포함된 소절만 통과
+                .filter(line -> containsHangul(line.getOriginalText()))
+                .map(line -> LyricLineResponseDto.builder()
+                        .lyricLineId(line.getLyricLineId())
+                        .lineNo(line.getLineNo())
+                        .originalText(line.getOriginalText())
+                        .textRomaja(line.getTextRomaja())
+                        .textEng(line.getTextEng())
+                        .nativeAudioUrl(line.getNativeAudioUrl())
+                        .startTime(line.getStartTime())
+                        .syllableTimings(line.getSyllableTimings())
+                        .build())
                 .toList();
 
         // SongLyricResponseDto를 조립하여 반환
