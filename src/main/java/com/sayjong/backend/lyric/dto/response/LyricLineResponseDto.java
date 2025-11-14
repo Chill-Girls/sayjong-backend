@@ -1,6 +1,7 @@
 package com.sayjong.backend.lyric.dto.response;
 
 import com.sayjong.backend.lyric.domain.LyricLine;
+import com.sayjong.backend.lyric.service.LyricLineService;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -30,10 +31,14 @@ public class LyricLineResponseDto {
     }
 
     public static LyricLineResponseDto from(LyricLine lyricLine) {
+
+        // 한국어 가사만 나오도록 필터링
+        String cleanedText = LyricLineService.cleanKoreanText(lyricLine.getOriginalText());
+
         return LyricLineResponseDto.builder()
                 .lyricLineId(lyricLine.getLyricLineId())
                 .lineNo(lyricLine.getLineNo())
-                .originalText(lyricLine.getOriginalText())
+                .originalText(cleanedText)
                 .textRomaja(lyricLine.getTextRomaja())
                 .textEng(lyricLine.getTextEng())
                 .nativeAudioUrl(lyricLine.getNativeAudioUrl())

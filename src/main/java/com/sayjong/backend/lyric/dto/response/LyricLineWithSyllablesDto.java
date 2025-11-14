@@ -2,6 +2,7 @@ package com.sayjong.backend.lyric.dto.response;
 
 import com.sayjong.backend.lyric.domain.LyricLine;
 import com.sayjong.backend.lyric.domain.LyricSyllable;
+import com.sayjong.backend.lyric.service.LyricLineService;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -30,6 +31,9 @@ public class LyricLineWithSyllablesDto {
 
     public static LyricLineWithSyllablesDto from(LyricLine line, List<LyricSyllable> syllables) {
 
+        // 한국어 가사만 나오도록 필터링
+        String cleanedText = LyricLineService.cleanKoreanText(line.getOriginalText());
+
         List<LyricSyllableResponseDto> syllableDtos = syllables.stream()
                 .map(LyricSyllableResponseDto::from)
                 .collect(Collectors.toList());
@@ -37,7 +41,7 @@ public class LyricLineWithSyllablesDto {
         return LyricLineWithSyllablesDto.builder()
                 .lyricLineId(line.getLyricLineId())
                 .lineNo(line.getLineNo())
-                .originalText(line.getOriginalText())
+                .originalText(cleanedText)
                 .syllables(syllableDtos)
                 .build();
     }
