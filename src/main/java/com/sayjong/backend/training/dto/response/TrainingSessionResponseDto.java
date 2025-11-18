@@ -17,7 +17,7 @@ public class TrainingSessionResponseDto {
 
     // 노래 정보
     private Integer songId;
-    private String title;
+    private String titleEng;
     private String singer;
     private String coverUrl;
 
@@ -29,7 +29,7 @@ public class TrainingSessionResponseDto {
                 .recentScore(session.getRecentScore())
                 .lastPlayedAt(session.getLastPlayedAt())
                 .songId(session.getSong().getSongId())
-                .title(session.getSong().getTitle())
+                .titleEng(session.getSong().getTitleEng())
                 .singer(session.getSong().getSinger())
                 .coverUrl(session.getSong().getCoverUrl())
                 .build();
