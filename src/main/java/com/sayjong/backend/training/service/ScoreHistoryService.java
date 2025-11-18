@@ -55,19 +55,16 @@ public class ScoreHistoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Song not found"));
 
         // TrainingSession 조회 또는 생성
-        TrainingSession session = trainingSessionRepository.findByUserAndSong(user, song)
+        TrainingSession tempSession = trainingSessionRepository.findByUserAndSong(user, song)
                 .orElseGet(() -> TrainingSession.builder()
                         .user(user)
                         .song(song)
-                        .bestScore(request.getScore())
-                        .recentScore(request.getScore())
+                        .bestScore(0)
+                        .recentScore(0)
+                        .averageScore(0)
                         .build());
 
-        // 점수 업데이트
-        if (session.getSessionId() != null) {
-            session.updateScores(request.getScore());
-        }
-        TrainingSession savedSession = trainingSessionRepository.save(session);
+        TrainingSession managedSession = trainingSessionRepository.save(tempSession);
 
         // ScoreHistory 생성
         ScoreHistory newScoreHistory = ScoreHistory.builder()
@@ -75,10 +72,17 @@ public class ScoreHistoryService {
                 .scoredAt(LocalDateTime.now())
                 .user(user)
                 .song(song)
-                .session(savedSession)
+                .session(managedSession) 
                 .build();
 
         ScoreHistory savedHistory = scoreHistoryRepository.save(newScoreHistory);
+
+        // 평균 점수 계산
+        Double average = scoreHistoryRepository.findAverageScoreBySessionId(managedSession.getSessionId());
+        int intAverage = (int) Math.round(average); // 반올림하여 정수로 변환
+
+        // 세션 정보 업데이트 (최근점수, 평균점수, 최고점수)
+        managedSession.updateScores(request.getScore(), intAverage);
 
         return ScoreResponseDto.from(savedHistory);
     }

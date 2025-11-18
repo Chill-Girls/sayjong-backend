@@ -26,6 +26,9 @@ public class TrainingSession {
     private Integer sessionId; // 학습목록ID(PK)
 
     @Column
+    private Integer averageScore; // 평균 점수
+
+    @Column
     private Integer bestScore; // best 점수
 
     @Column
@@ -39,9 +42,23 @@ public class TrainingSession {
     @JoinColumn(name = "song_id", nullable = false) // 노래식별자
     private Song song;
 
+    @Column
+    private LocalDateTime lastPlayedAt; // 최근에 학습한 노래 순으로 화면에 띄워주기 위해 추가
+
+    // 처음 생성될 때 시간 초기화
+    @PrePersist
+    public void prePersist() {
+        if (this.lastPlayedAt == null) {
+            this.lastPlayedAt = LocalDateTime.now();
+        }
+    }
+
     // 점수 업데이트
-    public void updateScores(int newScore) {
+    public void updateScores(int newScore, int newAverageScore) {
         this.recentScore = newScore;
+        this.averageScore = newAverageScore;
+
+        this.lastPlayedAt = LocalDateTime.now();
 
         // 최고 점수가 비어있거나, 새 점수가 더 높으면 최고 점수 갱신
         if (this.bestScore == null || newScore > this.bestScore) {
