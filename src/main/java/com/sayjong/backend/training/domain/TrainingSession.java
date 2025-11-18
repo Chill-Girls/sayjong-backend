@@ -26,6 +26,9 @@ public class TrainingSession {
     private Integer sessionId; // 학습목록ID(PK)
 
     @Column
+    private Integer averageScore; // 평균 점수
+
+    @Column
     private Integer bestScore; // best 점수
 
     @Column
@@ -38,6 +41,9 @@ public class TrainingSession {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id", nullable = false) // 노래식별자
     private Song song;
+
+    @Column
+    private LocalDateTime lastPlayedAt; // 최근에 학습한 노래 순으로 화면에 띄워주기 위해 추가
 
     // 점수 업데이트
     public void updateScores(int newScore) {
