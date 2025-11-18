@@ -38,4 +38,14 @@ public class TrainingSession {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id", nullable = false) // 노래식별자
     private Song song;
+
+    // 점수 업데이트
+    public void updateScores(int newScore) {
+        this.recentScore = newScore;
+
+        // 최고 점수가 비어있거나, 새 점수가 더 높으면 최고 점수 갱신
+        if (this.bestScore == null || newScore > this.bestScore) {
+            this.bestScore = newScore;
+        }
+    }
 }
